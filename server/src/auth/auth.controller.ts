@@ -18,12 +18,14 @@ export class AuthController {
     @Body('email') email: string,
     @Body('username') username: string,
     @Body('password') password: string,
+    @Body('role') role: string,
   ) {
     const result = await this.authService.signup(
       fullname,
       email,
       username,
       password,
+      role,
     );
   }
 }

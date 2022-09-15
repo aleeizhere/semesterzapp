@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
+  Alert,
   Button,
   FormControl,
   FormControlLabel,
@@ -12,8 +14,52 @@ import {
 } from "@mui/material";
 
 const Signup = () => {
+  const [userCreds, setUserCreds] = useState({
+    fullname: "",
+    email: "",
+    username: "",
+    password: "",
+    role: "",
+  });
+  const [issues, setIssues] = useState("");
+  const [showAlert, setShowAlert] = useState("none");
+
+  const clear = () => {
+    setUserCreds({
+      fullname: "",
+      email: "",
+      username: "",
+      password: "",
+      role: "",
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3333/auth/signup",
+        userCreds
+      );
+      setIssues(response.data.message);
+    } catch (e) {
+      setIssues(e.response.data.message);
+    }
+    clear();
+    setShowAlert("");
+    setTimeout(() => {
+      setShowAlert("none");
+    }, 2000);
+  };
+
   return (
     <>
+      <div>
+        <Alert severity="info" sx={{ display: `${showAlert}` }}>
+          {issues}
+        </Alert>
+      </div>
       <div
         style={{
           display: "flex",
@@ -27,6 +73,7 @@ const Signup = () => {
           autoComplete="off"
           noValidate
           style={{ margin: 2, width: "20rem" }}
+          onSubmit={handleSubmit}
         >
           <Typography variant="h6" sx={{ mb: 1 }}>
             Sign Up
@@ -37,6 +84,10 @@ const Signup = () => {
             label="Full Name"
             fullWidth
             sx={{ mb: 1 }}
+            value={userCreds.fullname}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, fullname: e.target.value })
+            }
           />
           <TextField
             name="email"
@@ -45,6 +96,22 @@ const Signup = () => {
             type="email"
             fullWidth
             sx={{ mb: 1 }}
+            value={userCreds.email}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, email: e.target.value })
+            }
+          />
+          <TextField
+            name="username"
+            variant="outlined"
+            label="Username"
+            type="text"
+            fullWidth
+            sx={{ mb: 1 }}
+            value={userCreds.username}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, username: e.target.value })
+            }
           />
           <TextField
             name="password"
@@ -53,6 +120,10 @@ const Signup = () => {
             type="password"
             fullWidth
             sx={{ mb: 1 }}
+            value={userCreds.password}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, password: e.target.value })
+            }
           />
 
           <FormControl sx={{ mt: 1 }}>
@@ -61,9 +132,12 @@ const Signup = () => {
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="student"
               name="radio-buttons-group"
+              value={userCreds.role}
               row
+              onChange={(e) =>
+                setUserCreds({ ...userCreds, role: e.target.value })
+              }
             >
               <FormControlLabel
                 value="student"
@@ -88,7 +162,13 @@ const Signup = () => {
           >
             Submit
           </Button>
-          <Button variant="contained" color="secondary" size="small" fullWidth>
+          <Button
+            onClick={clear}
+            variant="contained"
+            color="secondary"
+            size="small"
+            fullWidth
+          >
             Clear
           </Button>
         </form>
