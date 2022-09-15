@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     AuthModule,
     MongooseModule.forRoot(
-      'mongodb+srv://aleeizhere:codingiswhereimelt7@cluster0.holudwm.mongodb.net/semesterz?retryWrites=true&w=majority',
+      'mongolink here',
     ),
   ],
 })
