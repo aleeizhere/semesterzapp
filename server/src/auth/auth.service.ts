@@ -9,26 +9,35 @@ export class AuthService {
   ) {}
 
   async login(username: string, password: string) {
-    const userobj = await this.authModel.findOne(
-      { username: `${username}` },
-      { _id: 0, username: 1, password: 1, fullname: 1 },
-    );
+    const userobj = await this.authModel.findOne({ username: username });
     if (!userobj) {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: 'username or password is incorrect',
+          message: 'username or password is incorrect',
         },
         HttpStatus.NOT_FOUND,
       );
     }
     if (userobj.password === password) {
-      return userobj;
+      throw new HttpException(
+        {
+          user: {
+            username: userobj.username,
+            email: userobj.email,
+            fullname: userobj.fullname,
+            role: userobj.role,
+          },
+          status: HttpStatus.ACCEPTED,
+          message: 'user found',
+        },
+        HttpStatus.ACCEPTED,
+      );
     }
     throw new HttpException(
       {
         status: HttpStatus.NOT_FOUND,
-        error: 'username or password is incorrect',
+        message: 'username or password is incorrect',
       },
       HttpStatus.NOT_FOUND,
     );

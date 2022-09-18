@@ -13,7 +13,8 @@ const userSlice = createSlice({
       state.fullname = action.payload.fullname;
       state.username = action.payload.username;
       state.email = action.payload.email;
-      state.role = action.payload.password;
+      state.role = action.payload.role;
+      
     },
   },
 });

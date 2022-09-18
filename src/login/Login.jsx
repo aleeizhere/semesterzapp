@@ -1,7 +1,36 @@
 import { Button, Link, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { userActions } from "../store/userSlice";
+
+let rendCount = 0;
 const Login = () => {
+  const navigate = useNavigate();
+  const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
+  const dispatch = useDispatch();
+  const loginData = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (rendCount < 1) {
+      console.log(rendCount);
+      rendCount++;
+      return;
+    }
+    navigate(`/${loginData.role}`);
+  }, [loginData]);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const userApiData = await axios.post(
+      "http://localhost:3333/auth/login",
+      loginInfo
+    );
+    dispatch(userActions.setCurrentUser(userApiData.data.user));
+  }
+
   return (
     <>
       <div
@@ -17,17 +46,21 @@ const Login = () => {
           autoComplete="off"
           noValidate
           style={{ margin: 2, width: "20rem" }}
+          onSubmit={handleSubmit}
         >
           <Typography variant="h6" sx={{ mb: 1 }}>
             Login
           </Typography>
 
           <TextField
-            name="email"
+            name="username"
             variant="outlined"
-            label="Email"
-            type="email"
+            label="Username"
+            type="text"
             fullWidth
+            onChange={(e) => {
+              setLoginInfo({ ...loginInfo, username: e.target.value });
+            }}
             sx={{ mb: 1 }}
           />
           <TextField
@@ -36,6 +69,9 @@ const Login = () => {
             label="Password"
             type="password"
             fullWidth
+            onChange={(e) => {
+              setLoginInfo({ ...loginInfo, password: e.target.value });
+            }}
             sx={{ mb: 1 }}
           />
 

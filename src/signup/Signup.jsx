@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Alert,
@@ -145,9 +145,9 @@ const Signup = () => {
                 label="Student"
               />
               <FormControlLabel
-                value="instructor"
+                value="teacher"
                 control={<Radio />}
-                label="Instructor"
+                label="Teacher"
               />
             </RadioGroup>
           </FormControl>
