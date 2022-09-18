@@ -9,7 +9,7 @@ import { ProposalModule } from './proposals/proposal.module';
     PostModule,
     ProposalModule,
     MongooseModule.forRoot(
-      'mongodb+srv://aleeizhere:codingiswhereimelt7@cluster0.holudwm.mongodb.net/semesterz?retryWrites=true&w=majority',
+      'mongolink here',
     ),
   ],
 })
