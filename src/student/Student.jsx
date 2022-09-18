@@ -34,7 +34,13 @@ const Student = () => {
   return (
     <>
       <Box>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "1rem 2rem",
+          }}
+        >
           <Typography variant="h5" component="span" color="#a1887f" mb={3}>
             Welcome,{" "}
             <span style={{ color: "#212121" }}>{userData.fullname}</span>
@@ -50,11 +56,22 @@ const Student = () => {
             Logout
           </Button>
         </div>
-        <div>
-          <Typography variant="h6">Posts goes here</Typography>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Form currentUser={userData} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            margin: "1rem 2rem",
+            alignItems: "center",
+            padding: "10px",
+            border: "1px solid black",
+            borderRadius: "10px",
+          }}
+        >
           <Posts currentUser={userData.username} postsArray={postData} />
         </div>
-        <Form currentUser={userData.username} />
       </Box>
     </>
   );

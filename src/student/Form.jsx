@@ -29,8 +29,8 @@ const Form = ({ currentUser }) => {
   return (
     <div>
       <form autoComplete="off" onSubmit={(e) => handleSubmit(e)}>
-        <Box m={3} p={2} bgcolor={"#efebe9"} width="30rem">
-          <Typography variant="h5" mb={3}>
+        <Box m={3} p={3} bgcolor={"#efebe9"} width="30rem" borderRadius={4} >
+          <Typography variant="h5" mb={3} sx={{opacity: "0.4"}}>
             Post a Job
           </Typography>
           <TextField

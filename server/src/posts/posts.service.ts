@@ -30,13 +30,14 @@ export class PostService {
       await newPost.save();
       return newPost;
     } catch (e) {
-      throw new HttpException(
-        {
-          status: HttpStatus.CONFLICT,
-          message: "There's some problem in posting your job post",
-        },
-        HttpStatus.CONFLICT,
-      );
+      // throw new HttpException(
+      //   {
+      //     status: HttpStatus.CONFLICT,
+      //     message: "There's some problem in posting your job post",
+      //   },
+      //   HttpStatus.CONFLICT,
+      // );
+      console.log(e.message);
     }
   }
   //getting all posts, for teacher
@@ -59,8 +60,8 @@ export class PostService {
   }
 
   async deletePost(postId: string) {
-    // await this.postModel.deleteOne({ _id: postId });
     try {
+      await this.postModel.deleteOne({ _id: postId });
       return await axios.post(
         `http://localhost:3333/proposal/deletepostproposals/${postId}`,
       );

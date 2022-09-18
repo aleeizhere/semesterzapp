@@ -26,7 +26,7 @@ const Posts = ({ postsArray, currentUser }) => {
     </div>
   ) : !postsArray.length ? (
     <>
-      <h4>No Posts Yet</h4>
+      <h4 style={{ opacity: "0.5" }}>No Posts Yet</h4>
     </>
   ) : (
     postsArray.map((e) => (
@@ -37,8 +37,9 @@ const Posts = ({ postsArray, currentUser }) => {
           justifyContent: "space-evenly",
           alignItems: "center",
           marginBottom: "10px",
-          padding: "8px",
+          padding: "8px 2rem",
           backgroundColor: "#b2ebf2",
+          borderRadius: "5px"
         }}
       >
         <div style={{ width: "25rem" }}>Subject: {e.subject}</div>
@@ -56,6 +57,7 @@ const Posts = ({ postsArray, currentUser }) => {
             await axios.post("http://localhost:3333/posts/deletepost", {
               postId: e._id,
             });
+            window.location.reload();
           }}
         >
           Delete
