@@ -1,15 +1,23 @@
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
+import { Box } from "@mui/system";
 import React from "react";
 import { useSelector } from "react-redux";
 
-const Post = ({ handleOpen, setProposalData, proposalData, idlePosts }) => {
-  
-  return !idlePosts ? (
-    <CircularProgress></CircularProgress>
-  ) : !idlePosts.length ? (
-    <h4>No Posts Avaialable</h4>
+const EngagedPosts = ({ engagedPosts }) => {
+  return !engagedPosts ? (
+    <Box sx={{ width: "60%" }}>
+      <LinearProgress />
+    </Box>
+  ) : !engagedPosts.length ? (
+    <h4 style={{ opacity: "0.4  ", margin: "auto" }}>No Proposal Made Yet</h4>
   ) : (
-    idlePosts.map((post) => (
+    engagedPosts.map((post) => (
       <Grid item key={post._id}>
         <div
           style={{
@@ -19,6 +27,7 @@ const Post = ({ handleOpen, setProposalData, proposalData, idlePosts }) => {
             backgroundColor: "#b3e5fc",
             borderRadius: "10px",
             padding: "1rem",
+            width: "10rem",
           }}
         >
           <Typography variant="p" fontSize={15} textAlign="center">
@@ -41,21 +50,9 @@ const Post = ({ handleOpen, setProposalData, proposalData, idlePosts }) => {
           >
             {post.subject}
           </Typography>
-          <Button
-            onClick={() => {
-              handleOpen();
-              setProposalData({ ...proposalData, postId: post._id });
-              console.log(proposalData);
-            }}
-            variant="contained"
-            sx={{ backgroundColor: "#303f9f", color: "white" }}
-          >
-            Submit a Proposal
-          </Button>
         </div>
       </Grid>
     ))
   );
 };
-
-export default Post;
+export default EngagedPosts;

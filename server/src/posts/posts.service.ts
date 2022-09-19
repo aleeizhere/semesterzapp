@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel } from './posts.model';
 import { AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import axios from 'axios';
 
 @Injectable({})
@@ -86,14 +86,16 @@ export class PostService {
         'http://localhost:3333/proposal/getallproposals',
       );
 
-      if (!allProposals.data.length) {
-        return { allPosts: allPosts };
-      } else {
-        const allIdlePosts = allProposals.data.map((e) => {
-          return allPosts.filter((post) => post._id != e.postId);
-        });
-        return allIdlePosts[0];
-      }
+      return allPosts;
+      // } else {
+      //   const allIdlePosts = allProposals.data.map((proposal) => {
+      //     const filteredArr = allPosts.filter(
+      //       (post) => proposal.postId !== post._id.toString(),
+      //     );
+      //     console.log(filteredArr.length);
+      //     return filteredArr;
+      //   });
+      //   return allIdlePosts.slice(-1);
     } catch (e) {
       return e;
     }
