@@ -12,10 +12,10 @@ const Login = () => {
   const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
   const dispatch = useDispatch();
   const loginData = useSelector((state) => state.user);
+  const [issues, setIssues] = useState("none");
 
   useEffect(() => {
     if (rendCount < 1) {
-      console.log(rendCount);
       rendCount++;
       return;
     }
@@ -24,11 +24,20 @@ const Login = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const userApiData = await axios.post(
-      "http://localhost:3333/auth/login",
-      loginInfo
-    );
-    dispatch(userActions.setCurrentUser(userApiData.data.user));
+    try {
+      const userApiData = await axios.post(
+        "http://localhost:3333/auth/login",
+        loginInfo
+      );
+      dispatch(userActions.setCurrentUser(userApiData.data.user));
+    } catch (e) {
+      if (e.response.data.status >= 400) {
+        setIssues("block");
+        setTimeout(() => {
+          setIssues("none");
+        }, 3000);
+      }
+    }
   }
 
   return (
@@ -38,10 +47,13 @@ const Login = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          height: "100vh",
+          height: "90vh",
           alignItems: "center",
         }}
       >
+        <div style={{ display: `${issues}`, color: "red" }}>
+          Incorrect username or password
+        </div>
         <form
           autoComplete="off"
           noValidate

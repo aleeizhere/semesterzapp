@@ -82,7 +82,8 @@ const Teacher = () => {
         }}
       >
         <Typography variant="h5" component="span" color="#a1887f" mb={3}>
-          Welcome, <span style={{ color: "#212121" }}>DummyName</span>
+          Welcome,{" "}
+          <span style={{ color: "#212121" }}>{currentUser.fullname}</span>
         </Typography>
         <Button
           type="submit"

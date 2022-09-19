@@ -39,7 +39,7 @@ const Posts = ({ postsArray, currentUser }) => {
           marginBottom: "10px",
           padding: "8px 2rem",
           backgroundColor: "#b2ebf2",
-          borderRadius: "5px"
+          borderRadius: "5px",
         }}
       >
         <div style={{ width: "25rem" }}>Subject: {e.subject}</div>
@@ -57,7 +57,7 @@ const Posts = ({ postsArray, currentUser }) => {
             await axios.post("http://localhost:3333/posts/deletepost", {
               postId: e._id,
             });
-            window.location.reload();
+            // window.location.reload();
           }}
         >
           Delete

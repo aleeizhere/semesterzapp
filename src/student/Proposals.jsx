@@ -14,7 +14,7 @@ const Proposals = () => {
     //yahan selectedPostId state main se hat rahi hai tabhi proposals fetch nhi horahay
     // i want this to dispatch action only once
     dispatch(fetchProposals(selectedPostId));
-  });
+  }, []);
 
   return !proposals ? (
     <CircularProgress></CircularProgress>

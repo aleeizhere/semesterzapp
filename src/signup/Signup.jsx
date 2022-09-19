@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Alert,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [userCreds, setUserCreds] = useState({
     fullname: "",
     email: "",
@@ -34,23 +36,37 @@ const Signup = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+      );
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3333/auth/signup",
-        userCreds
-      );
-      setIssues(response.data.message);
-    } catch (e) {
-      setIssues(e.response.data.message);
+    if (!validateEmail(userCreds.email)) {
+      alert("Invalid Email");
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:3333/auth/signup",
+          userCreds
+        );
+        setIssues(response.data.message);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } catch (e) {
+        setIssues(e.response.data.message);
+      }
+      clear();
+      setShowAlert("");
+      setTimeout(() => {
+        setShowAlert("none");
+      }, 2000);
     }
-    clear();
-    setShowAlert("");
-    setTimeout(() => {
-      setShowAlert("none");
-    }, 2000);
   };
 
   return (
