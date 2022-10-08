@@ -1,7 +1,6 @@
 import { Button, Link, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userActions } from "../store/userSlice";
@@ -15,11 +14,9 @@ const Login = () => {
   const [issues, setIssues] = useState("none");
 
   useEffect(() => {
-    if (rendCount < 1) {
-      rendCount++;
-      return;
+    if (loginData.role) {
+      navigate(`${loginData.role}`);
     }
-    navigate(`/${loginData.role}`);
   }, [loginData]);
 
   async function handleSubmit(e) {
@@ -98,7 +95,14 @@ const Login = () => {
             Sign In
           </Button>
         </form>
-        <Link href="/signup">Sign Up</Link>
+        <Link
+          sx={{ cursor: "pointer" }}
+          onClick={() => {
+            navigate("/signup");
+          }}
+        >
+          Sign Up
+        </Link>
       </div>
     </>
   );

@@ -2,18 +2,26 @@ import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React from "react";
 
-const Form = ({ setProposalData, proposalData }) => {
+const Form = ({
+  setProposalData,
+  proposalData,
+  changed,
+  setChanged,
+  setOpen,
+}) => {
   async function sendProposal(e) {
+    e.preventDefault();
     const response = await axios.post(
       "http://localhost:3333/proposal/create",
       proposalData
     );
-    console.log(response);
+    setChanged(!changed);
   }
   return (
     <form
-      onSubmit={() => {
-        sendProposal();
+      onSubmit={(e) => {
+        sendProposal(e);
+        setOpen(false);
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>

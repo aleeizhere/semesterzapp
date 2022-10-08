@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -27,5 +27,16 @@ export class AuthController {
       password,
       role,
     );
+  }
+
+  @Get('/getallusers')
+  async getAllUser() {
+    const users = await this.authService.gettingAllUsers();
+    return users;
+  }
+
+  @Post('/deleteuser/:username')
+  async deleteUser(@Param('username') username: string) {
+    await this.authService.deleteUser(username);
   }
 }

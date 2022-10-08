@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import axios from 'axios';
 import { Model } from 'mongoose';
 import { ProposalModel } from './proposals.model';
 
@@ -39,7 +40,10 @@ export class ProposalService {
 
   async getPostProposals(postId: string) {
     try {
-      const proposalsArray = await this.proposalModel.find({ postId: postId });
+      const proposalsArray = await this.proposalModel.find({
+        postId: postId,
+        status: 'pending',
+      });
       return proposalsArray;
     } catch (e) {
       throw new HttpException(
@@ -72,7 +76,6 @@ export class ProposalService {
     try {
       const submittedProposals = await this.proposalModel.find({
         teacherUsername: username,
-        status: 'pending',
       });
       // console.log('service submittedProposals', submittedProposals);
       return submittedProposals;
@@ -82,4 +85,44 @@ export class ProposalService {
   }
   //when the student would click the accept proposal, the pending property of the proposal would update to completed
   //the deal property of the post model would update with the object of the proposalId that is accepted.
+
+  async acceptProposal(proposalId: string) {
+    try {
+      const proposal = await this.proposalModel.findById(proposalId);
+      await this.proposalModel.findOneAndUpdate(
+        { _id: proposalId },
+        { status: 'accepted' },
+      );
+      const postId = proposal.postId;
+      //hit an api that changes the status property of this post
+      await axios.post(`http://localhost:3333/posts/acceptpost/${postId}`);
+      // console.log('proposal status changed', proposal);
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  async rejectProposal(proposalId: string) {
+    try {
+      const proposal = await this.proposalModel.findById(proposalId);
+      await this.proposalModel.findOneAndUpdate(
+        { _id: proposalId },
+        { status: 'rejected' },
+      );
+      // console.log(proposal);
+      const postId = proposal.postId;
+      await axios.post(`http://localhost:3333/posts/rejectpost/${postId}`);
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  async deleteproposals(username: string) {
+    try {
+      console.log('deleting posts of', username);
+      await this.proposalModel.deleteMany({ teacherUsername: username });
+    } catch (e) {
+      return e;
+    }
+  }
 }

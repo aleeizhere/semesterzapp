@@ -45,7 +45,7 @@ const Post = ({ handleOpen, setProposalData, proposalData, idlePosts }) => {
             onClick={() => {
               handleOpen();
               setProposalData({ ...proposalData, postId: post._id });
-              console.log(proposalData);
+              // console.log(proposalData);
             }}
             variant="contained"
             sx={{ backgroundColor: "#303f9f", color: "white" }}

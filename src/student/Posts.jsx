@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 
-const Posts = ({ postsArray, currentUser }) => {
+const Posts = ({ postsArray, currentUser, setChanged, changed }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -57,7 +57,7 @@ const Posts = ({ postsArray, currentUser }) => {
             await axios.post("http://localhost:3333/posts/deletepost", {
               postId: e._id,
             });
-            // window.location.reload();
+            setChanged(!changed);
           }}
         >
           Delete

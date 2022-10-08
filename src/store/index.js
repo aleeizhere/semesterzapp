@@ -2,12 +2,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice from "./userSlice";
 import postSlice from "./postSlice";
 import proposalSlice from "./proposalSlice";
-import { persistReducer, persistStore } from "redux-persist"; 
-import sessionStorage from "redux-persist/es/storage/session";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import adminSlice from "./adminSlice";
 
 const persistConfig = {
   key: "root",
-  storage: sessionStorage,
+  storage: storage,
 };
 
 // const persistedReducerUser = persistReducer(persistConfig, userSlice.reducer);
@@ -21,6 +22,7 @@ const reducer = combineReducers({
   user: userSlice.reducer,
   post: postSlice.reducer,
   proposals: proposalSlice.reducer,
+  admin: adminSlice.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, reducer);
 

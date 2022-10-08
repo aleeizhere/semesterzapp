@@ -14,7 +14,12 @@ const userSlice = createSlice({
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.role = action.payload.role;
-      
+    },
+    removeCurrentUser(state) {
+      state.fullname = null;
+      state.username = null;
+      state.email = null;
+      state.role = null;
     },
   },
 });

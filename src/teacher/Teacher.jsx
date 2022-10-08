@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Modal, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Form from "./Form";
@@ -13,15 +6,17 @@ import Post from "./Post";
 import { useDispatch, useSelector } from "react-redux";
 import { postActions } from "../store/postSlice";
 import EngagedPosts from "./EngagedPosts";
-
+import { useNavigate } from "react-router-dom";
+import { userActions } from "../store/userSlice";
 const Teacher = () => {
+  const [changed, setChanged] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const currentUser = useSelector((state) => state.user);
   const idlePosts = useSelector((state) => state.post.posts);
-  const engagedPosts = useSelector((state) => state.post.selectedPost);
   const [proposalData, setProposalData] = useState({
     postId: "",
     teacherUsername: currentUser.username,
@@ -31,46 +26,45 @@ const Teacher = () => {
   });
 
   useEffect(() => {
-    async function getPosts() {
-      const idlePosts = await axios.get(
-        "http://localhost:3333/posts/getidleposts"
-      );
-      const engagedPosts = await axios.get(
-        `http://localhost:3333/posts/getengagedposts/${currentUser.username}`
-      );
-      const engagedPostsArray = engagedPosts.data;
-      let idlePostsArray = idlePosts.data;
+    if (currentUser.role === "teacher") {
+      async function getPosts() {
+        const idlePosts = await axios.get(
+          "http://localhost:3333/posts/getidleposts"
+        );
+        const engagedPosts = await axios.get(
+          `http://localhost:3333/posts/getengagedposts/${currentUser.username}`
+        );
+        const engagedPostsArray = engagedPosts.data;
+        let idlePostsArray = idlePosts.data;
+        /*
+          console.log("engaged Posts", engagedPostsArray);
+          console.log("idle Posts", idlePostsArray);
+        */
 
-      //remove engaged posts from the idlePostsArray
-      //run a loop over engagedPostsArray and pick id of each element one by one
-      //check whether that id is in the idlePost  Array or not if yes then pop it
+        //remove engaged posts from the idlePostsArray
+        //run a loop over engagedPostsArray and pick id of each element one by one
+        //check whether that id is in the idlePost  Array or not if yes then pop it
 
-      console.log("Engaged Posts", engagedPostsArray);
-      console.log("Idle Posts", idlePostsArray);
+        // console.log("Engaged Posts", engagedPostsArray);
+        // console.log("Idle Posts", idlePostsArray);
 
-      // engagedPostsArray.forEach((engagedPost) => {
-      //   let filteredArray = idlePostsArray.filter((idlePost) => {
-      //     return idlePost._id !== engagedPost._id;
-      //   });
-      //   console.log(filteredArray);
-      // });
-
-      engagedPostsArray.forEach((engagedPost) => {
-        let filteredArray = idlePostsArray.filter((idlePost) => {
-          return idlePost._id !== engagedPost._id;
+        engagedPostsArray.forEach((engagedPost) => {
+          let filteredArray = idlePostsArray.filter((idlePost) => {
+            return idlePost._id !== engagedPost._id;
+          });
+          idlePostsArray = filteredArray;
         });
-        idlePostsArray = filteredArray;
-      });
 
-      // engagedPostsArray.forEach((item)=>{
-
-      // })
-
-      dispatch(postActions.setSelectedPost(engagedPostsArray));
-      dispatch(postActions.setPosts(idlePostsArray));
+        dispatch(postActions.setSelectedPost(engagedPostsArray));
+        dispatch(postActions.setPosts(idlePostsArray));
+      }
+      getPosts();
+    } else if (!currentUser.role) {
+      navigate("/");
+    } else {
+      navigate("/problempage");
     }
-    getPosts();
-  }, [dispatch]);
+  }, [changed]);
 
   return (
     <>
@@ -89,8 +83,8 @@ const Teacher = () => {
           type="submit"
           variant="contained"
           onClick={() => {
-            sessionStorage.clear();
-            window.location.replace("/");
+            dispatch(userActions.removeCurrentUser());
+            navigate("/");
           }}
         >
           Logout
@@ -129,7 +123,7 @@ const Teacher = () => {
         m="1rem 5rem"
         p="2rem 1rem"
       >
-        <EngagedPosts engagedPosts={engagedPosts} />
+        <EngagedPosts changed={changed} />
       </Grid>
       <Modal
         open={open}
@@ -150,7 +144,13 @@ const Teacher = () => {
             p: 4,
           }}
         >
-          <Form proposalData={proposalData} setProposalData={setProposalData} />
+          <Form
+            setOpen={setOpen}
+            setChanged={setChanged}
+            changed={changed}
+            proposalData={proposalData}
+            setProposalData={setProposalData}
+          />
         </Box>
       </Modal>
     </>

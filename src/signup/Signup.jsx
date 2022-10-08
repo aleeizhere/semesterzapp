@@ -191,7 +191,12 @@ const Signup = () => {
         <Typography sx={{ color: "#90a4ae" }} variant="p" component="span">
           Already have an account?
         </Typography>
-        <Link href="/" sx={{ color: "#607d8b" }}>
+        <Link
+          sx={{ cursor: "pointer", color: "#607d8b" }}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           Log In
         </Link>
       </div>

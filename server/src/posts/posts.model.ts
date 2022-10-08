@@ -5,6 +5,7 @@ export const PostsSchema = new mongoose.Schema({
   fullname: { type: String, required: true },
   subject: { type: String, required: true },
   description: { type: String, required: true },
+  status: { type: String, required: true },
 });
 
 export interface PostModel extends mongoose.Document {
@@ -13,4 +14,5 @@ export interface PostModel extends mongoose.Document {
   fullname: string;
   subject: string;
   description: string;
+  status: string;
 }

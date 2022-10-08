@@ -18,8 +18,11 @@ export class PostController {
       fullname,
       subject,
       description,
+      'available',
     );
   }
+
+   
 
   @Get('/getposts/:creator')
   async getPosts(@Param('creator') creator: string) {
@@ -50,5 +53,17 @@ export class PostController {
   async getEngagedPosts(@Param('username') username: string) {
     const engagedPosts = await this.postService.getEngagedPosts(username);
     return engagedPosts;
+  }
+  @Post('/acceptpost/:postId')
+  async acceptPost(@Param('postId') postId: string) {
+    await this.postService.acceptPost(postId);
+  }
+  @Post('/rejectpost/:postId')
+  async rejectPost(@Param('postId') postId: string) {
+    await this.postService.rejectPost(postId);
+  }
+  @Post('/deleteallposts/:username')
+  async deleteAllPosts(@Param('username') username: string) {
+    await this.postService.deleteAllPosts(username);
   }
 }

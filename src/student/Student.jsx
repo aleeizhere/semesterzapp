@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 // import { fetchPosts } from "../store/postActions";
 import { postActions } from "../store/postSlice";
-
+import { userActions } from "../store/userSlice";
 import axios from "axios";
 import Form from "./Form";
 import Posts from "./Posts";
@@ -15,21 +15,27 @@ import { useNavigate } from "react-router-dom";
 const Student = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const userData = useSelector((state) => state.user);
   const postData = useSelector((state) => state.post.posts);
+  const [changed, setChanged] = useState(true);
 
   useEffect(() => {
-    const getPostData = async () => {
-      const apiResult = await axios.get(
-        `http://localhost:3333/posts/getposts/${userData.username}`
-      );
+    if (userData.role === "student") {
+      const getPostData = async () => {
+        const apiResult = await axios.get(
+          `http://localhost:3333/posts/getposts/${userData.username}`
+        );
 
-      dispatch(postActions.setPosts(apiResult.data));
-    };
+        dispatch(postActions.setPosts(apiResult.data));
+      };
 
-    getPostData(); //of the logged in user
-  }, []);
+      getPostData(); //of the logged in user
+    } else if (!userData.role) {
+      navigate("/");
+    } else {
+      navigate("/problempage");
+    }
+  }, [changed]);
 
   return (
     <>
@@ -49,15 +55,19 @@ const Student = () => {
             type="submit"
             variant="contained"
             onClick={() => {
-              sessionStorage.clear();
-              window.location.replace("/");
+              dispatch(userActions.removeCurrentUser());
+              navigate("/");
             }}
           >
             Logout
           </Button>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Form currentUser={userData} />
+          <Form
+            currentUser={userData}
+            setChanged={setChanged}
+            changed={changed}
+          />
         </div>
         <div
           style={{
@@ -70,7 +80,14 @@ const Student = () => {
             borderRadius: "10px",
           }}
         >
-          <Posts currentUser={userData.username} postsArray={postData} />
+          <div style={{ display: "flex", flexDirection: "column-reverse" }}>
+            <Posts
+              currentUser={userData.username}
+              postsArray={postData}
+              setChanged={setChanged}
+              changed={changed}
+            />
+          </div>
         </div>
       </Box>
     </>

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import axios from 'axios';
 import { Model } from 'mongoose';
 import { AuthModel } from './auth.model';
 @Injectable({})
@@ -57,10 +58,11 @@ export class AuthService {
       password,
       role,
     });
-    const dbObj = await this.authModel.findOne(
-      { username: username, email: email },
-      { username: 1, email: 1, role: 1 },
-    );
+    const dbObj = await this.authModel.findOne({
+      username: username,
+      email: email,
+    });
+
     if (dbObj) {
       throw new HttpException(
         {
@@ -78,6 +80,36 @@ export class AuthService {
         },
         HttpStatus.ACCEPTED,
       );
+    }
+  }
+
+  async gettingAllUsers() {
+    try {
+      const users = await this.authModel.find({}, { password: 0 });
+      return users;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async deleteUser(username: string) {
+    try {
+      const userRole = await this.authModel.findOne(
+        { username: username },
+        { role: 1 },
+      );
+      if (userRole.role === 'student') {
+        await axios.post(
+          `http://localhost:3333/posts/deleteallposts/${username}`,
+        );
+      } else {
+        await axios.post(
+          `http://localhost:3333/proposal/deleteallproposal/${username}`,
+        );
+      }
+      await this.authModel.findOneAndDelete({ username: username });
+    } catch (e) {
+      return e;
     }
   }
 }

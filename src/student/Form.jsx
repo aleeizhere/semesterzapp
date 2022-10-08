@@ -1,36 +1,30 @@
 import React, { useState } from "react";
-import {
-  Typography,
-  Box,
-  CircularProgress,
-  Button,
-  TextField,
-} from "@mui/material";
+import { Typography, Box, Button, TextField } from "@mui/material";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { postActions } from "../store/postSlice";
 
-const Form = ({ currentUser }) => {
-  const dispatch = useDispatch();
+const Form = ({ currentUser, setChanged, changed }) => {
   const [postDataInput, setPostDataInput] = useState({
     subject: "",
     description: "",
   });
 
   async function handleSubmit(e) {
+    e.preventDefault();
     await axios.post("http://localhost:3333/posts/create", {
       username: currentUser.username,
       fullname: currentUser.fullname,
       subject: postDataInput.subject,
       description: postDataInput.description,
     });
+    setChanged(!changed);
+    setPostDataInput({ ...postDataInput, description: "", subject: "" });
   }
 
   return (
     <div>
       <form autoComplete="off" onSubmit={(e) => handleSubmit(e)}>
-        <Box m={3} p={3} bgcolor={"#efebe9"} width="30rem" borderRadius={4} >
-          <Typography variant="h5" mb={3} sx={{opacity: "0.4"}}>
+        <Box m={3} p={3} bgcolor={"#efebe9"} width="30rem" borderRadius={4}>
+          <Typography variant="h5" mb={3} sx={{ opacity: "0.4" }}>
             Post a Job
           </Typography>
           <TextField

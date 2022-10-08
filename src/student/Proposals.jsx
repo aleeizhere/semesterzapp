@@ -1,5 +1,6 @@
 import { Button, CircularProgress } from "@mui/material";
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { postActions } from "../store/postSlice";
@@ -9,24 +10,46 @@ const Proposals = () => {
   const selectedPostId = useSelector((state) => state.post.selectedPost);
   const dispatch = useDispatch();
   const proposals = useSelector((state) => state.proposals.proposals);
+  const [dataChanged, setDataChanged] = useState(false);
   //this postId data should be dispatched and the state must be updated with the array of proposal objects
   useEffect(() => {
     //yahan selectedPostId state main se hat rahi hai tabhi proposals fetch nhi horahay
     // i want this to dispatch action only once
     dispatch(fetchProposals(selectedPostId));
-  }, []);
+  }, [dataChanged]);
 
+  async function handleAccept(proposalId) {
+    await axios.post("http://localhost:3333/proposal/acceptproposal", {
+      proposalId,
+    });
+    setDataChanged(!dataChanged);
+  }
+  async function handleReject(proposalId) {
+    await axios.post("http://localhost:3333/proposal/rejectproposal", {
+      proposalId,
+    });
+    setDataChanged(!dataChanged);
+  }
   return !proposals ? (
     <CircularProgress></CircularProgress>
   ) : !proposals.length ? (
     <h4>No Proposals yet</h4>
   ) : (
     <>
-      <div style={{ paddingLeft: "10rem" }}>
+      <div
+        style={{
+          paddingLeft: "10rem",
+        }}
+      >
         <h3>Proposals</h3>
       </div>
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginTop: "2rem",
+          flexDirection: "column-reverse",
+        }}
       >
         {proposals.map((i) => (
           <div
@@ -65,6 +88,9 @@ const Proposals = () => {
                 variant="container"
                 sx={{ backgroundColor: "#e8eaf6" }}
                 size="small"
+                onClick={() => {
+                  handleAccept(i._id);
+                }}
               >
                 Accept
               </Button>
@@ -72,6 +98,9 @@ const Proposals = () => {
                 variant="container"
                 sx={{ backgroundColor: "#e8eaf6" }}
                 size="small"
+                onClick={() => {
+                  handleReject(i._id);
+                }}
               >
                 Reject
               </Button>

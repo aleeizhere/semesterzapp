@@ -42,4 +42,16 @@ export class ProposalController {
     // console.log('submittedProposals');
     return await this.proposalService.getSubmittedProposals(username);
   }
+  @Post('/acceptproposal')
+  async acceptProposal(@Body('proposalId') proposalId: string) {
+    await this.proposalService.acceptProposal(proposalId);
+  }
+  @Post('/rejectproposal')
+  async rejectProposal(@Body('proposalId') proposalId: string) {
+    await this.proposalService.rejectProposal(proposalId);
+  }
+  @Post('/deleteallproposal/:username')
+  async deleteallproposal(@Param('username') username: string) {
+    await this.proposalService.deleteproposals(username);
+  }
 }
