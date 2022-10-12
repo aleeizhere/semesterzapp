@@ -40,7 +40,7 @@ const Proposals = () => {
     setDataChanged(!dataChanged);
   }
   return (
-    <>
+    <div className="mb-10">
       <div className="flex items-center justify-between w-full  bg-slate-600 h-8 px-8 ">
         <div className="font-logo font-semibold text-lg text-white">
           Semester
@@ -121,7 +121,7 @@ const Proposals = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

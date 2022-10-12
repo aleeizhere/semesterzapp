@@ -66,7 +66,7 @@ const Teacher = () => {
   }, [changed]);
 
   return (
-    <>
+    <div className="mb-10">
       <div className="flex items-center justify-between w-full bg-slate-600 h-8 px-8 mb-2">
         <div className="font-logo font-semibold text-lg text-white">
           Semester
@@ -122,7 +122,7 @@ const Teacher = () => {
           />
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
