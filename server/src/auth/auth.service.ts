@@ -1,12 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import axios from 'axios';
+
 import { Model } from 'mongoose';
 import { AuthModel } from './auth.model';
+import * as bcrypt from 'bcrypt';
+import { PostModel } from 'src/posts/posts.model';
+import { ProposalModel } from 'src/proposals/proposals.model';
 @Injectable({})
 export class AuthService {
   constructor(
+    @InjectModel('Post') private readonly postModel: Model<PostModel>,
     @InjectModel('Auth') private readonly authModel: Model<AuthModel>,
+    @InjectModel('Proposal')
+    private readonly proposalModel: Model<ProposalModel>,
   ) {}
 
   async login(username: string, password: string) {
@@ -20,28 +26,54 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (userobj.password === password) {
+
+    if (userobj.role !== 'admin') {
+      if (await bcrypt.compare(password, userobj.password)) {
+        throw new HttpException(
+          {
+            user: {
+              username: userobj.username,
+              email: userobj.email,
+              fullname: userobj.fullname,
+              role: userobj.role,
+            },
+            status: HttpStatus.ACCEPTED,
+            message: 'user found',
+          },
+          HttpStatus.ACCEPTED,
+        );
+      }
       throw new HttpException(
         {
-          user: {
-            username: userobj.username,
-            email: userobj.email,
-            fullname: userobj.fullname,
-            role: userobj.role,
-          },
-          status: HttpStatus.ACCEPTED,
-          message: 'user found',
+          status: HttpStatus.NOT_FOUND,
+          message: 'username or password is incorrect',
         },
-        HttpStatus.ACCEPTED,
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      if (password === userobj.password) {
+        throw new HttpException(
+          {
+            user: {
+              username: userobj.username,
+              email: userobj.email,
+              fullname: userobj.fullname,
+              role: userobj.role,
+            },
+            status: HttpStatus.ACCEPTED,
+            message: 'user found',
+          },
+          HttpStatus.ACCEPTED,
+        );
+      }
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: 'username or password is incorrect',
+        },
+        HttpStatus.NOT_FOUND,
       );
     }
-    throw new HttpException(
-      {
-        status: HttpStatus.NOT_FOUND,
-        message: 'username or password is incorrect',
-      },
-      HttpStatus.NOT_FOUND,
-    );
   }
 
   async signup(
@@ -51,11 +83,13 @@ export class AuthService {
     password: string,
     role: string,
   ) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPass = await bcrypt.hash(password, salt);
     const newUser = new this.authModel({
       fullname,
       email,
       username,
-      password,
+      password: hashedPass,
       role,
     });
     const dbObj = await this.authModel.findOne({
@@ -99,13 +133,15 @@ export class AuthService {
         { role: 1 },
       );
       if (userRole.role === 'student') {
-        await axios.post(
-          `http://localhost:3333/posts/deleteallposts/${username}`,
-        );
+        await this.postModel.deleteMany({ creator: username });
+        // await axios.post(
+        //   `http://localhost:3333/posts/deleteallposts/${username}`,
+        // );
       } else {
-        await axios.post(
-          `http://localhost:3333/proposal/deleteallproposal/${username}`,
-        );
+        await this.proposalModel.deleteMany({ creator: username });
+        //   await axios.post(
+        //   `http://localhost:3333/proposal/deleteallproposal/${username}`,
+        // );
       }
       await this.authModel.findOneAndDelete({ username: username });
     } catch (e) {

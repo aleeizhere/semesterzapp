@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, Typography } from "@mui/material";
+import { Modal } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Form from "./Form";
@@ -8,6 +8,7 @@ import { postActions } from "../store/postSlice";
 import EngagedPosts from "./EngagedPosts";
 import { useNavigate } from "react-router-dom";
 import { userActions } from "../store/userSlice";
+import { backendUri } from "../constants";
 const Teacher = () => {
   const [changed, setChanged] = useState(true);
   const dispatch = useDispatch();
@@ -28,11 +29,9 @@ const Teacher = () => {
   useEffect(() => {
     if (currentUser.role === "teacher") {
       async function getPosts() {
-        const idlePosts = await axios.get(
-          "http://localhost:3333/posts/getidleposts"
-        );
+        const idlePosts = await axios.get(`${backendUri}/posts/getidleposts`);
         const engagedPosts = await axios.get(
-          `http://localhost:3333/posts/getengagedposts/${currentUser.username}`
+          `${backendUri}/posts/getengagedposts/${currentUser.username}`
         );
         const engagedPostsArray = engagedPosts.data;
         let idlePostsArray = idlePosts.data;
@@ -68,82 +67,52 @@ const Teacher = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "1rem 2rem",
-        }}
-      >
-        <Typography variant="h5" component="span" color="#a1887f" mb={3}>
-          Welcome,{" "}
-          <span style={{ color: "#212121" }}>{currentUser.fullname}</span>
-        </Typography>
-        <Button
-          type="submit"
-          variant="contained"
-          onClick={() => {
-            dispatch(userActions.removeCurrentUser());
-            navigate("/");
-          }}
-        >
-          Logout
-        </Button>
+      <div className="flex items-center justify-between w-full bg-slate-600 h-8 px-8 mb-2">
+        <div className="font-logo font-semibold text-lg text-white">
+          Semester
+          <span className="text-orange-400 font-logo font-semibold">z</span>
+        </div>
+        <div className="flex justify-center w-24">
+          <button
+            className="border-1 border-slate-100 text-slate-100 hover:bg-slate-100 hover:text-slate-900 px-4 rounded-full active:px-3 transition-all"
+            onClick={() => {
+              dispatch(userActions.removeCurrentUser());
+              navigate("/");
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
-      <Grid
-        container
-        columnSpacing={4}
-        rowSpacing={2}
-        width="90%"
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        mt="2rem"
-        m="4rem 5rem"
-        p="2rem 1rem"
-      >
-        <Post
-          handleOpen={handleOpen}
-          setProposalData={setProposalData}
-          proposalData={proposalData}
-          idlePosts={idlePosts}
-        />
-      </Grid>
-      <Typography variant="h5" m="0 5rem" sx={{ opacity: "0.7" }}>
-        Engaged Posts
-      </Typography>
-      <Grid
-        container
-        columnSpacing={4}
-        rowSpacing={2}
-        width="90%"
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        m="1rem 5rem"
-        p="2rem 1rem"
-      >
-        <EngagedPosts changed={changed} />
-      </Grid>
+      <div className=" mx-4 flex items-center justify-between ">
+        <div className=" my-9">
+          <h2 className=" text-gray-400 font-thin">Welcome,</h2>
+          <h2 className="text-2xl text-gray-900 font-normal">
+            {currentUser.fullname}
+          </h2>
+        </div>
+      </div>
+
+      <Post
+        handleOpen={handleOpen}
+        setProposalData={setProposalData}
+        proposalData={proposalData}
+        idlePosts={idlePosts}
+      />
+      <div className="flex items-center flex-col mt-4">
+        <h1 className="text text-2xl text-gray-500 mb-8">Engaged Posts</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 w-3/4 px-3 gap-8">
+          <EngagedPosts changed={changed} />
+        </div>
+      </div>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
+        <div className="outline-none w-full px-3 absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 lg:w-2/4">
           <Form
             setOpen={setOpen}
             setChanged={setChanged}
@@ -151,7 +120,7 @@ const Teacher = () => {
             proposalData={proposalData}
             setProposalData={setProposalData}
           />
-        </Box>
+        </div>
       </Modal>
     </>
   );

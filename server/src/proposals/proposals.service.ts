@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import axios from 'axios';
 import { Model } from 'mongoose';
+import { PostModel } from 'src/posts/posts.model';
 import { ProposalModel } from './proposals.model';
 
 @Injectable({})
@@ -9,6 +9,7 @@ export class ProposalService {
   constructor(
     @InjectModel('Proposal')
     private readonly proposalModel: Model<ProposalModel>,
+    @InjectModel('Post') private readonly postModel: Model<PostModel>,
   ) {}
 
   async createProposal(
@@ -94,8 +95,13 @@ export class ProposalService {
         { status: 'accepted' },
       );
       const postId = proposal.postId;
+      const post = await this.postModel.findOneAndUpdate(
+        { _id: postId },
+        { status: 'accepted' },
+      );
       //hit an api that changes the status property of this post
-      await axios.post(`http://localhost:3333/posts/acceptpost/${postId}`);
+      // await axios.post(`http://localhost:3333/posts/acceptpost/${postId}`);
+
       // console.log('proposal status changed', proposal);
     } catch (e) {
       return e.data;
@@ -111,7 +117,11 @@ export class ProposalService {
       );
       // console.log(proposal);
       const postId = proposal.postId;
-      await axios.post(`http://localhost:3333/posts/rejectpost/${postId}`);
+      // await axios.post(`http://localhost:3333/posts/rejectpost/${postId}`);
+      const post = await this.postModel.findOneAndUpdate(
+        { _id: postId },
+        { status: 'rejected' },
+      );
     } catch (e) {
       return e.data;
     }

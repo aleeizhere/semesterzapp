@@ -4,6 +4,7 @@ import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { backendUri } from "../constants";
 import { proposalActions } from "../store/proposalSlice";
 
 const EngagedPosts = ({ changed }) => {
@@ -14,7 +15,7 @@ const EngagedPosts = ({ changed }) => {
   useEffect(() => {
     async function bringSubmittedProposals(username) {
       const proposalsResp = await axios.get(
-        `http://localhost:3333/proposal/submittedproposals/${username}`
+        `${backendUri}/proposal/submittedproposals/${username}`
       );
       dispatch(proposalActions.setProposal(proposalsResp.data));
     }
@@ -35,18 +36,8 @@ const EngagedPosts = ({ changed }) => {
       // console.log(postProposal);
       if (postProposal.status === "accepted") {
         return (
-          <Grid item key={post._id}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                backgroundColor: "#00e676",
-                borderRadius: "10px",
-                padding: "1rem",
-                width: "10rem",
-              }}
-            >
+          <div>
+            <div className="flex border-1 border-gray-300 flex-col justify-center bg-green-200 rounded-lg p-4">
               <Typography variant="p" fontSize={15} textAlign="center">
                 {post.fullname}
               </Typography>
@@ -69,21 +60,13 @@ const EngagedPosts = ({ changed }) => {
                 {post.subject}
               </Typography>
             </div>
-          </Grid>
+          </div>
         );
       } else if (postProposal.status === "rejected") {
         return (
-          <Grid item key={post._id}>
+          <div>
             <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                backgroundColor: "#f44336",
-                borderRadius: "10px",
-                padding: "1rem",
-                width: "10rem",
-              }}
+              className="flex border-1 border-gray-300 flex-col justify-center bg-red-400 rounded-lg p-4"
             >
               <Typography variant="p" fontSize={15} textAlign="center">
                 {post.fullname}
@@ -107,21 +90,13 @@ const EngagedPosts = ({ changed }) => {
                 {post.subject}
               </Typography>
             </div>
-          </Grid>
+          </div>
         );
       } else {
         return (
-          <Grid item key={post._id}>
+          <div>
             <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                backgroundColor: "#b3e5fc",
-                borderRadius: "10px",
-                padding: "1rem",
-                width: "10rem",
-              }}
+              className="flex border-1 border-gray-300 flex-col justify-center bg-blue-200 rounded-lg p-4"
             >
               <Typography variant="p" fontSize={15} textAlign="center">
                 {post.fullname}
@@ -145,7 +120,7 @@ const EngagedPosts = ({ changed }) => {
                 {post.subject}
               </Typography>
             </div>
-          </Grid>
+          </div>
         );
       }
     })

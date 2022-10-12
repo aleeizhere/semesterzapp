@@ -6,11 +6,13 @@ import { useDispatch } from "react-redux";
 import { postActions } from "../store/postSlice";
 import { userActions } from "../store/userSlice";
 import axios from "axios";
-import Form from "./Form";
 import Posts from "./Posts";
-import { Button, Typography } from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { backendUri } from "../constants";
+import { Modal } from "@mui/material";
+import Form from "./Form";
 
 const Student = () => {
   const dispatch = useDispatch();
@@ -18,12 +20,13 @@ const Student = () => {
   const userData = useSelector((state) => state.user);
   const postData = useSelector((state) => state.post.posts);
   const [changed, setChanged] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (userData.role === "student") {
       const getPostData = async () => {
         const apiResult = await axios.get(
-          `http://localhost:3333/posts/getposts/${userData.username}`
+          `${backendUri}/posts/getposts/${userData.username}`
         );
 
         dispatch(postActions.setPosts(apiResult.data));
@@ -39,51 +42,80 @@ const Student = () => {
 
   return (
     <>
-      <Box>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "1rem 2rem",
-          }}
-        >
-          <Typography variant="h5" component="span" color="#a1887f" mb={3}>
-            Welcome,{" "}
-            <span style={{ color: "#212121" }}>{userData.fullname}</span>
-          </Typography>
-          <Button
-            type="submit"
-            variant="contained"
+      <div className="flex items-center justify-between w-full bg-slate-600 h-8 px-8 ">
+        <div className="font-logo font-semibold text-lg text-white">
+          Semester
+          <span className="text-orange-400 font-logo font-semibold">z</span>
+        </div>
+        <div className="flex justify-center w-24">
+          <button
+            className="border-1 border-slate-100 text-slate-100 hover:bg-slate-100 hover:text-slate-900 px-4 rounded-full active:px-3 transition-all"
             onClick={() => {
               dispatch(userActions.removeCurrentUser());
               navigate("/");
             }}
           >
             Logout
-          </Button>
+          </button>
         </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Form
-            currentUser={userData}
-            setChanged={setChanged}
-            changed={changed}
-          />
+      </div>
+      <Box>
+        <div className=" mx-4 flex items-center justify-between ">
+          <div className=" my-9">
+            <h2 className=" text-gray-400 font-thin">Welcome,</h2>
+            <h2 className="text-2xl text-gray-900 font-normal">
+              {userData.fullname}
+            </h2>
+          </div>
+          <div
+            className="bg-orange-300 h-fit rounded-full text-white lg:hidden"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <AddRoundedIcon sx={{ fontSize: "40px" }} />
+          </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "1rem 2rem",
-            alignItems: "center",
-            padding: "10px",
-            border: "1px solid black",
-            borderRadius: "10px",
+        <Modal
+          open={open}
+          onClose={() => {
+            setOpen(false);
           }}
         >
+          <div className="outline-none w-full px-3 absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2">
+            <Form
+              currentUser={userData}
+              setChanged={setChanged}
+              changed={changed}
+            />
+          </div>
+        </Modal>
+        <div className="px-4 lg:hidden">
           <div style={{ display: "flex", flexDirection: "column-reverse" }}>
             <Posts
               currentUser={userData.username}
               postsArray={postData}
+              setChanged={setChanged}
+              changed={changed}
+            />
+          </div>
+        </div>
+
+        {/* For large Screens */}
+        <div className="lg:grid grid-cols-3 gap-10 hidden px-4">
+          <div className="px-4 col-span-2 ">
+            <div style={{ display: "flex", flexDirection: "column-reverse" }}>
+              <Posts
+                currentUser={userData.username}
+                postsArray={postData}
+                setChanged={setChanged}
+                changed={changed}
+              />
+            </div>
+          </div>
+          <div className="outline-none  px-3">
+            <Form
+              currentUser={userData}
               setChanged={setChanged}
               changed={changed}
             />

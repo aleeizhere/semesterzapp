@@ -70,7 +70,11 @@ const Signup = () => {
   };
 
   return (
-    <>
+    <div className="h-screen flex flex-col justify-between">
+      <div className="flex items-center w-full bg-slate-600 h-8 px-8 text-lg text-white font-logo font-semibold justify-center md:justify-start lg:justify-start">
+        Semester
+        <span className="text-orange-400 font-logo font-semibold">z</span>
+      </div>
       <div>
         <Alert severity="info" sx={{ display: `${showAlert}` }}>
           {issues}
@@ -94,7 +98,7 @@ const Signup = () => {
           <Typography variant="h6" sx={{ mb: 1 }}>
             Sign Up
           </Typography>
-          <TextField
+          {/* <TextField
             name="name"
             variant="outlined"
             label="Full Name"
@@ -104,8 +108,17 @@ const Signup = () => {
             onChange={(e) =>
               setUserCreds({ ...userCreds, fullname: e.target.value })
             }
+          /> */}
+          <input
+            placeholder="Full Name"
+            type="text"
+            className="w-full outline-1 outline-gray-200 px-3 py-2 border-1 border-gray-200 rounded-md mb-3"
+            value={userCreds.fullname}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, fullname: e.target.value })
+            }
           />
-          <TextField
+          {/* <TextField
             name="email"
             variant="outlined"
             label="Email"
@@ -116,8 +129,17 @@ const Signup = () => {
             onChange={(e) =>
               setUserCreds({ ...userCreds, email: e.target.value })
             }
+          /> */}
+          <input
+            placeholder="Email"
+            type="text"
+            className="w-full outline-1 outline-gray-200 px-3 py-2 border-1 border-gray-200 rounded-md mb-3"
+            value={userCreds.email}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, email: e.target.value })
+            }
           />
-          <TextField
+          {/* <TextField
             name="username"
             variant="outlined"
             label="Username"
@@ -128,8 +150,17 @@ const Signup = () => {
             onChange={(e) =>
               setUserCreds({ ...userCreds, username: e.target.value })
             }
+          /> */}
+          <input
+            placeholder="Username"
+            type="text"
+            className="w-full outline-1 outline-gray-200 px-3 py-2 border-1 border-gray-200 rounded-md mb-3"
+            value={userCreds.username}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, username: e.target.value })
+            }
           />
-          <TextField
+          {/* <TextField
             name="password"
             variant="outlined"
             label="Password"
@@ -140,8 +171,16 @@ const Signup = () => {
             onChange={(e) =>
               setUserCreds({ ...userCreds, password: e.target.value })
             }
+          /> */}
+          <input
+            placeholder="Password"
+            type="password"
+            className="w-full outline-1 outline-gray-200 px-3 py-2 border-1 border-gray-200 rounded-md mb-3"
+            value={userCreds.password}
+            onChange={(e) =>
+              setUserCreds({ ...userCreds, password: e.target.value })
+            }
           />
-
           <FormControl sx={{ mt: 1 }}>
             <FormLabel id="demo-radio-buttons-group-label">
               Who are you?
@@ -167,26 +206,17 @@ const Signup = () => {
               />
             </RadioGroup>
           </FormControl>
-
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            sx={{ mb: 2 }}
-            fullWidth
-          >
-            Submit
-          </Button>
-          <Button
-            onClick={clear}
-            variant="contained"
-            color="secondary"
-            size="small"
-            fullWidth
-          >
-            Clear
-          </Button>
+          <div className="flex flex-col items-center">
+            <button className="mb-3 bg-slate-600 text-white w-full py-2 rounded-full hover:bg-gray-800 active:w-5/6 transition-all ease-out">
+              Submit
+            </button>
+            <div
+              onClick={clear}
+              className="mb-3 bg-slate-600 text-white w-full py-2 rounded-full hover:bg-gray-800 active:w-5/6 transition-all ease-out text-center cursor-pointer"
+            >
+              Clear
+            </div>
+          </div>
         </form>
         <Typography sx={{ color: "#90a4ae" }} variant="p" component="span">
           Already have an account?
@@ -200,7 +230,10 @@ const Signup = () => {
           Log In
         </Link>
       </div>
-    </>
+      <div className="flex items-center justify-center w-full bg-slate-700 h-20 lg:h-4 text-white text-center text-tiny">
+        All Rights Reserved - Semesterz
+      </div>
+    </div>
   );
 };
 

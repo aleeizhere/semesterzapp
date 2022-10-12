@@ -1,0 +1,7 @@
+When the user logs in and their credentials verifies.
+The server responses back with the token that reaches the front end.
+
+We can simply authenticate users by looking at their username, find that username in the DB
+and if that username exists we will check what type of user he is and whether is allowed to visit that path or not.
+
+User ne front end se token bheja, server ne token ko decode kia uss main se information nikaali, uss info ki buniyaad pe db main banda search kia 

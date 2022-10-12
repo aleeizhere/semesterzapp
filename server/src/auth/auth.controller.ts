@@ -12,6 +12,7 @@ export class AuthController {
     //call the login function from the service
     await this.authService.login(username, password);
   }
+  //
   @Post('/signup')
   async signup(
     @Body('fullname') fullname: string,

@@ -1,17 +1,8 @@
-import {
-  ConsoleLogger,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel } from './posts.model';
 import { ProposalModel } from 'src/proposals/proposals.model';
-import { AxiosResponse } from 'axios';
-import { filter, Observable } from 'rxjs';
-import axios from 'axios';
 
 @Injectable({})
 export class PostService {
@@ -40,13 +31,6 @@ export class PostService {
       await newPost.save();
       return newPost;
     } catch (e) {
-      // throw new HttpException(
-      //   {
-      //     status: HttpStatus.CONFLICT,
-      //     message: "There's some problem in posting your job post",
-      //   },
-      //   HttpStatus.CONFLICT,
-      // );
       console.log(e.message);
     }
   }
@@ -82,9 +66,9 @@ export class PostService {
   async deletePost(postId: string) {
     try {
       await this.postModel.deleteOne({ _id: postId });
-      return await axios.post(
-        `http://localhost:3333/proposal/deletepostproposals/${postId}`,
-      );
+
+      return await this.proposalModel.deleteMany({ postId: postId });
+      // `http://localhost:3333/proposal/deletepostproposals/${postId}`,
     } catch (e) {
       return e;
     }
@@ -126,10 +110,13 @@ export class PostService {
   async getEngagedPosts(username: string) {
     try {
       let allPosts = await this.postModel.find();
-      const submittedProposals = await axios.get(
-        `http://localhost:3333/proposal/submittedproposals/${username}`,
-      );
-      const engagedPosts = submittedProposals.data.map((proposal) => {
+      const submittedProposals = await this.proposalModel.find({
+        teacherUsername: username,
+      });
+      // const submittedProposals = await axios.get(
+      // `http://localhost:3333/proposal/submittedproposals/${username}`,
+      // );
+      const engagedPosts = submittedProposals.map((proposal) => {
         return allPosts.find((post) => post._id.toString() === proposal.postId);
       });
       // const rejectedPosts = submittedProposals.data.map((proposal) => {
