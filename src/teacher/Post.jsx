@@ -5,9 +5,11 @@ import { useSelector } from "react-redux";
 
 const Post = ({ handleOpen, setProposalData, proposalData, idlePosts }) => {
   return !idlePosts ? (
-    <CircularProgress></CircularProgress>
+    <div className="flex justify-center opacity-50">
+      <CircularProgress></CircularProgress>
+    </div>
   ) : !idlePosts.length ? (
-    <h4>No Posts Avaialable</h4>
+    <div className="text-center opacity-50">No new Posts Avaialable</div>
   ) : (
     idlePosts.map((post) => (
       // <div key={post.id} className="border-1 border-black">

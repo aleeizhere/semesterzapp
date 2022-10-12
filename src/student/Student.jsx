@@ -21,6 +21,7 @@ const Student = () => {
   const postData = useSelector((state) => state.post.posts);
   const [changed, setChanged] = useState(true);
   const [open, setOpen] = useState(false);
+  const [loginWait, setLoginWait] = useState("false");
 
   useEffect(() => {
     if (userData.role === "student") {
@@ -76,6 +77,7 @@ const Student = () => {
             <AddRoundedIcon sx={{ fontSize: "40px" }} />
           </div>
         </div>
+
         <Modal
           open={open}
           onClose={() => {

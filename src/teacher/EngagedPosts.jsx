@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { backendUri } from "../constants";
 import { proposalActions } from "../store/proposalSlice";
+import ProgressGif from "./ProgressGif.gif";
 
 const EngagedPosts = ({ changed }) => {
   const dispatch = useDispatch();
@@ -23,11 +24,11 @@ const EngagedPosts = ({ changed }) => {
   }, [changed]);
 
   return !engagedPosts || !proposals ? (
-    <Box sx={{ width: "60%" }}>
-      <LinearProgress />
-    </Box>
+    <div className="flex justify-center absolute left-1/2 -translate-x-1/2 ">
+      <img src={ProgressGif} alt="" className="w-3/5 opacity-60" />
+    </div>
   ) : !engagedPosts.length > 0 ? (
-    <h4 style={{ opacity: "0.4  ", margin: "auto" }}>No Proposal Made Yet</h4>
+    <div className="text-center">No Proposal Made Yet </div>
   ) : (
     engagedPosts.map((post) => {
       const postProposal = proposals.find(
@@ -65,9 +66,7 @@ const EngagedPosts = ({ changed }) => {
       } else if (postProposal.status === "rejected") {
         return (
           <div>
-            <div
-              className="flex border-1 border-gray-300 flex-col justify-center bg-red-400 rounded-lg p-4"
-            >
+            <div className="flex border-1 border-gray-300 flex-col justify-center bg-red-400 rounded-lg p-4">
               <Typography variant="p" fontSize={15} textAlign="center">
                 {post.fullname}
               </Typography>
@@ -95,9 +94,7 @@ const EngagedPosts = ({ changed }) => {
       } else {
         return (
           <div>
-            <div
-              className="flex border-1 border-gray-300 flex-col justify-center bg-blue-200 rounded-lg p-4"
-            >
+            <div className="flex border-1 border-gray-300 flex-col justify-center bg-blue-200 rounded-lg p-4">
               <Typography variant="p" fontSize={15} textAlign="center">
                 {post.fullname}
               </Typography>

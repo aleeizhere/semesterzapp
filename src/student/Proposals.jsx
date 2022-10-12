@@ -62,7 +62,7 @@ const Proposals = () => {
         <CircularProgress></CircularProgress>
       ) : !proposals.length ? (
         <div className="flex flex-col items-center pt-24 h-screen opacity-25 px-4">
-          <h4 className="text-3xl mb-3">No Proposals yet</h4>
+          <h4 className="text-3xl mb-3">No Proposals</h4>
           <h4 className="text-xl text-center">
             As soon as any teacher send a proposal on this post they'll appear
             here.

@@ -2,12 +2,13 @@ import { Button, CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useSelector } from "react-redux";
+import { backendUri } from "../constants";
 
 const Teachers = ({ changed, setChanged }) => {
   const teachersData = useSelector((state) => state.admin.teachers);
 
   async function handleDelete(username) {
-    await axios.post(`http://localhost:3333/auth/deleteuser/${username}`);
+    await axios.post(`${backendUri}/auth/deleteuser/${username}`);
     setChanged(!changed);
   }
   return teachersData ? (

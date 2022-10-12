@@ -1,10 +1,11 @@
 import { userActions } from "./userSlice";
 import axios from "axios";
+import { backendUri } from "../constants";
 
 export const fetchUser = (username, password) => {
   return async (dispatch) => {
     const fetchHandler = async () => {
-      const resp = await axios.post("http://localhost:3333/auth/login", {
+      const resp = await axios.post(`${backendUri}/auth/login`, {
         username,
         password,
       });

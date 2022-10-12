@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { backendUri } from "../constants";
 import {
   Alert,
   Button,
@@ -51,7 +52,7 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:3333/auth/signup",
+          `${backendUri}/auth/signup`,
           userCreds
         );
         setIssues(response.data.message);
